@@ -3,7 +3,6 @@ from math import sin
 import pygame
 import random
 from PVector import PVector
-from Bullet import Bullet
 from Spaceship import Spaceship
 
 class EnemySpaceship(Spaceship):

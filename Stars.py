@@ -1,7 +1,6 @@
 import pygame
 import random
-
-STAR_RADIUS = 1
+import constants
 
 # Define a Star class
 class Star:
@@ -19,5 +18,5 @@ class Star:
             self.x = random.randint(0, self.width)
 
     def draw(self, screen, color):
-        pygame.draw.circle(screen, color, (int(self.x), int(self.y)), STAR_RADIUS)
+        pygame.draw.circle(screen, color, (int(self.x), int(self.y)), constants.STAR_RADIUS)
 

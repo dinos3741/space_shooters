@@ -1,74 +1,44 @@
 import pygame
 import sys
-
-# Define constants for state identifiers
-MENU_STATE = 0
-GAMEPLAY_STATE = 1
-GAME_OVER_STATE = 2
-
-class MenuState:
-    def __init__(self):
-        pass
-
-    def handle_events(self, events):
-        for event in events:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                return GAMEPLAY_STATE
-        return MENU_STATE
-
-    def update(self):
-        pass
-
-    def render(self, screen):
-        screen.fill((0, 0, 0))
-        font = pygame.font.Font(None, 36)
-        text = font.render("Press SPACE to start", True, (255, 255, 255))
-        screen.blit(text, (200, 200))
-
-class GameplayState:
-    def __init__(self):
-        pass
-
-    def handle_events(self, events):
-        for event in events:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                return MENU_STATE
-        return GAMEPLAY_STATE
-
-    def update(self):
-        pass
-
-    def render(self, screen):
-        screen.fill((255, 0, 0))
-
-class GameOverState:
-    def __init__(self):
-        pass
-
-    def handle_events(self, events):
-        for event in events:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                return GAMEPLAY_STATE
-        return GAME_OVER_STATE
-
-    def update(self):
-        pass
-
-    def render(self, screen):
-        screen.fill((0, 0, 255))
-        font = pygame.font.Font(None, 36)
-        text = font.render("Game Over! Press SPACE to restart", True, (255, 255, 255))
-        screen.blit(text, (100, 200))
+import constants
+from GameState import GameState
+from MenuState import MenuState
+from GameplayState import GameplayState
+from GameOverState import GameOverState
+from Stars import Star
+from UserSpaceship import UserSpaceship
+from EnemySpaceship import EnemySpaceship
 
 def main():
+    # Initialize Pygame, screen and clock. Screen will be passed as dependency in all render methods
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode((constants.WIDTH, constants.HEIGHT))
+    pygame.display.set_caption("Space Shooters")
     clock = pygame.time.Clock()
 
-    state = MENU_STATE
-    menu_state = MenuState()
-    gameplay_state = GameplayState()
-    game_over_state = GameOverState()
+    # Initialize Pygame mixer
+    pygame.mixer.init()
+
+    # create objects to inject in state classes as needed
+    stars = [Star(constants.WIDTH, constants.HEIGHT) for _ in range(constants.NUM_STARS)]
+
+    # Create an instance of the Spaceship class
+    userSpaceship = UserSpaceship(screen_width=constants.WIDTH, screen_height=constants.HEIGHT,
+                                       size=constants.USER_SPACESHIP_SIZE,
+                                       mass=constants.USER_SPACESHIP_MASS, bullet_color=constants.GREEN,
+                                       friction=constants.FRICTION, image_str='Assets/spaceship.png')
+
+    # Create an initial set of instances of the EnemySpaceship class
+    enemies = [EnemySpaceship(screen_width=constants.WIDTH, screen_height=constants.HEIGHT,
+                                   size=constants.ENEMY_SPACESHIP_SIZE,
+                                   mass=constants.ENEMY_SPACESHIP_MASS, bullet_color=constants.YELLOW, friction=1,
+                                   image_str='Assets/enemy.png') for _ in range(constants.NUM_ENEMIES)]
+
+    # instantiate the state objects
+    game_state = GameState()
+    menu_state = MenuState(stars, game_state)  # pass the objects as dependency wherever needed
+    gameplay_state = GameplayState(stars, userSpaceship, enemies, game_state)
+    game_over_state = GameOverState(stars, game_state)
 
     while True:
         events = pygame.event.get()
@@ -77,18 +47,27 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        if state == MENU_STATE:
-            state = menu_state.handle_events(events)
+        # Update game state
+        game_state.update()
+
+        if game_state.state == constants.MENU_STATE:
+            # handle events and return current state
+            menu_state.handle_events(events)
             menu_state.render(screen)
-        elif state == GAMEPLAY_STATE:
-            state = gameplay_state.handle_events(events)
+            menu_state.update()
+
+        elif game_state.state == constants.GAMEPLAY_STATE:
+            gameplay_state.handle_events(events)
             gameplay_state.render(screen)
-        elif state == GAME_OVER_STATE:
-            state = game_over_state.handle_events(events)
+            gameplay_state.update()
+
+        elif game_state.state == constants.GAME_OVER_STATE:
+            game_over_state.handle_events(events)
             game_over_state.render(screen)
+            game_over_state.update()
 
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(constants.FPS)
 
 if __name__ == "__main__":
     main()

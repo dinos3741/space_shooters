@@ -2,7 +2,6 @@ import pygame
 from PVector import PVector
 from Spaceship import Spaceship
 
-MAX_SPEED = 5
 KEYS_FORCE = 3
 
 class UserSpaceship(Spaceship):

@@ -28,7 +28,7 @@ class EnemySpaceship:
         self.wander_theta = 0  # initial angle for wander method
 
         # load spaceship png image (needs to be in the same folder as the code files)
-        self.image = pygame.image.load("enemy.png")  # Replace "spaceship.png" with your image file
+        self.image = pygame.image.load("Assets/enemy.png")  # Replace "spaceship.png" with your image file
         self.image = pygame.transform.scale(self.image, (self.size, self.size))
 
         self.rect = self.image.get_rect()

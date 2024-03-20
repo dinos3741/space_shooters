@@ -1,29 +1,10 @@
 import pygame
 import sys
+import constants
 
 from EnemySpaceship import EnemySpaceship
 from UserSpaceship import UserSpaceship
-from stars import Star
-
-# Constants
-WIDTH, HEIGHT = 800, 600  # window dimensions
-NUM_STARS = 100
-NUM_ENEMIES = 5
-LIVES = 3
-FPS = 60
-USER_SPACESHIP_SIZE = 100
-USER_SPACESHIP_MASS = 5
-ENEMY_SPACESHIP_SIZE = 50
-ENEMY_SPACESHIP_MASS = 3
-FRICTION = 0.98
-SPLASH_SCREEN_DURATION = 2000  # Duration of splash screen in milliseconds (3 seconds)
-
-# Colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (150, 235, 8)
-YELLOW = (134, 123, 23)
-PINK = (142, 65, 123)
+from Stars import Star
 
 # Initialize Pygame
 pygame.init()
@@ -32,15 +13,15 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Create a list of stars
-stars = [Star(WIDTH, HEIGHT) for _ in range(NUM_STARS)]
+stars = [Star(constants.WIDTH, constants.HEIGHT) for _ in range(constants.NUM_STARS)]
 
 # Create an instance of the Spaceship class
-userSpaceship = UserSpaceship(screen_width=WIDTH, screen_height=HEIGHT, size=USER_SPACESHIP_SIZE, mass=USER_SPACESHIP_MASS,
-                              bullet_color=GREEN, friction=FRICTION, image_str='spaceship.png')
+userSpaceship = UserSpaceship(screen_width=constants.WIDTH, screen_height=constants.HEIGHT, size=constants.USER_SPACESHIP_SIZE,
+                        mass=constants.USER_SPACESHIP_MASS, bullet_color=constants.GREEN, friction=constants.FRICTION, image_str='spaceship.png')
 
 # Create an initial set of instances of the EnemySpaceship class
-Enemies = [EnemySpaceship(screen_width=WIDTH, screen_height=HEIGHT, size=ENEMY_SPACESHIP_SIZE, mass=ENEMY_SPACESHIP_MASS,
-                          bullet_color=YELLOW, friction=1, image_str='enemy.png') for _ in range(NUM_ENEMIES)]
+Enemies = [EnemySpaceship(screen_width=constants.WIDTH, screen_height=constants.HEIGHT, size=constants.ENEMY_SPACESHIP_SIZE, mass=constants.ENEMY_SPACESHIP_MASS,
+                          bullet_color=constants.YELLOW, friction=1, image_str='enemy.png') for _ in range(constants.NUM_ENEMIES)]
 
 # Initialize Pygame mixer
 pygame.mixer.init()
@@ -51,7 +32,7 @@ class Game:
     # inject dependencies on the spaceship objects
     def __init__(self, userspaceship, enemies):
         # Initialize the screen and caption
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pygame.display.set_mode((constants.WIDTH, constants.HEIGHT))
         pygame.display.set_caption("Space Destroyers")
 
         # get dependency objects
@@ -59,19 +40,19 @@ class Game:
         self.enemies = enemies
 
         # load user laser bullet sound
-        self.laser_sound = pygame.mixer.Sound('laser.mp3')
+        self.laser_sound = pygame.mixer.Sound('Assets/laser.mp3')
         self.laser_sound.set_volume(0.1)
 
         # load user hit sound
-        self.user_hit_sound = pygame.mixer.Sound('user-hit.mp3')
+        self.user_hit_sound = pygame.mixer.Sound('Assets/user-hit.mp3')
         self.user_hit_sound.set_volume(0.3)
 
         # load user explosion sound
-        self.user_explode_sound = pygame.mixer.Sound('user-explode.mp3')
+        self.user_explode_sound = pygame.mixer.Sound('Assets/user-explode.mp3')
         self.user_explode_sound.set_volume(0.2)
 
         # load enemy explosion sound
-        self.enemy_explode_sound = pygame.mixer.Sound('enemy-explode.mp3')
+        self.enemy_explode_sound = pygame.mixer.Sound('Assets/enemy-explode.mp3')
         self.enemy_explode_sound.set_volume(0.6)
 
         # get the starting time of the game
@@ -80,7 +61,7 @@ class Game:
         self.font = pygame.font.Font(None, 36)  # Use a font and size of your choice
 
         self.score = 0
-        self.lives = LIVES
+        self.lives = constants.LIVES
 
         # flag to indicate loop is running
         self.running = True
@@ -103,16 +84,16 @@ class Game:
 
             # fill up the list of enemies if right shift is pressed
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_RSHIFT and not self.game_over:
-                if len(self.enemies) < NUM_ENEMIES:
-                    remaining = NUM_ENEMIES - len(self.enemies)
-                    self.enemies = self.enemies + [EnemySpaceship(WIDTH, HEIGHT, ENEMY_SPACESHIP_SIZE, ENEMY_SPACESHIP_MASS, YELLOW, 1,
-                                                                  'enemy.png') for _ in range(remaining)]
+                if len(self.enemies) < constants.NUM_ENEMIES:
+                    remaining = constants.NUM_ENEMIES - len(self.enemies)
+                    self.enemies = self.enemies + [EnemySpaceship(constants.WIDTH, constants.HEIGHT, constants.ENEMY_SPACESHIP_SIZE,
+                                                constants.ENEMY_SPACESHIP_MASS, constants.YELLOW, 1, 'enemy.png') for _ in range(remaining)]
 
 
     # Draw and move the stars
     def drawStars(self):
         for star in stars:
-            star.draw(self.screen, WHITE)
+            star.draw(self.screen, constants.WHITE)
             star.move()
 
 
@@ -178,8 +159,8 @@ class Game:
 
     # create splash screen
     def create_splash_screen(self):
-        splash_screen_image = pygame.image.load("splash_screen_image.jpg")
-        splash_screen_image = pygame.transform.scale(splash_screen_image, (WIDTH/2, HEIGHT/2))
+        splash_screen_image = pygame.image.load("Assets/splash_screen_image.jpg")
+        splash_screen_image = pygame.transform.scale(splash_screen_image, (constants.WIDTH / 2, constants.HEIGHT / 2))
 
         font = pygame.font.Font(None, 80)
         game_over_text = font.render("Space Shooters!", True, (123, 255, 23))
@@ -193,27 +174,27 @@ class Game:
 
             # Check if it's time to exit the splash screen
             current_time = pygame.time.get_ticks()
-            if current_time - self.start_time >= SPLASH_SCREEN_DURATION:
+            if current_time - self.start_time >= constants.SPLASH_SCREEN_DURATION:
                 return  # Exit the method and continue with the game
 
             # Display the splash screen image
-            self.screen.fill(BLACK)  # Fill the screen with black background
+            self.screen.fill(constants.BLACK)  # Fill the screen with black background
             self.screen.blit(splash_screen_image, (
-            (WIDTH - splash_screen_image.get_width()) // 2, (HEIGHT - splash_screen_image.get_height()) // 2))
+                (constants.WIDTH - splash_screen_image.get_width()) // 2, (constants.HEIGHT - splash_screen_image.get_height()) // 2))
 
-            text_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 200))
+            text_rect = game_over_text.get_rect(center=(constants.WIDTH // 2, constants.HEIGHT // 2 - 200))
             self.screen.blit(game_over_text, text_rect)
 
             # Update the display
             pygame.display.flip()
-            clock.tick(FPS)
+            clock.tick(constants.FPS)
 
 
     def display_game_over_screen(self):
-        self.screen.fill(BLACK)
+        self.screen.fill(constants.BLACK)
         font = pygame.font.Font(None, 64)
-        game_over_text = font.render("Game Over", True, WHITE)
-        text_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        game_over_text = font.render("Game Over", True, constants.WHITE)
+        text_rect = game_over_text.get_rect(center=(constants.WIDTH // 2, constants.HEIGHT // 2))
         self.screen.blit(game_over_text, text_rect)
         # display the score, the lives and the star effect
         self.drawStars()
@@ -225,7 +206,7 @@ class Game:
 
     # play background music from mp3 source
     def play_background_music(self):
-        pygame.mixer.music.load("ethereal-ambient-music.mp3")
+        pygame.mixer.music.load("Assets/ethereal-ambient-music.mp3")
         pygame.mixer.music.set_volume(0.2)
         pygame.mixer.music.play(-1)  # -1 indicates loop indefinitely
 
@@ -238,17 +219,17 @@ class Game:
 
     # display the score in the bottom left corner
     def display_score(self):
-        text_surface = self.font.render("Enemies shot: " + str(self.score), True, PINK)
+        text_surface = self.font.render("Enemies shot: " + str(self.score), True, constants.PINK)
         text_rect = text_surface.get_rect()
-        text_rect.bottomleft = (10, HEIGHT - 10)  # Position the text in the bottom-left corner
+        text_rect.bottomleft = (10, constants.HEIGHT - 10)  # Position the text in the bottom-left corner
         self.screen.blit(text_surface, text_rect)
 
 
     # display lives at bottom right corner
     def display_lives(self):
-        text_surface = self.font.render("Lives: " + str(self.lives), True, WHITE)
+        text_surface = self.font.render("Lives: " + str(self.lives), True, constants.WHITE)
         text_rect = text_surface.get_rect()
-        text_rect.bottomright = (WIDTH - 10, HEIGHT - 10)  # Position the text at the bottom-right corner
+        text_rect.bottomright = (constants.WIDTH - 10, constants.HEIGHT - 10)  # Position the text at the bottom-right corner
         self.screen.blit(text_surface, text_rect)
 
     #-----------------------------------------------------------------
@@ -261,7 +242,7 @@ class Game:
 
         while self.running:
             self.handle_events()
-            self.screen.fill(BLACK)
+            self.screen.fill(constants.BLACK)
 
             if not self.game_over:
                 self.drawStars()
@@ -281,7 +262,7 @@ class Game:
             # SOS: this always at the bottom
             pygame.display.flip()
             # Cap the frame rate
-            clock.tick(FPS)
+            clock.tick(constants.FPS)
 
         pygame.quit()
         sys.exit()

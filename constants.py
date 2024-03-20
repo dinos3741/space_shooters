@@ -1,0 +1,24 @@
+# Define constants for state identifiers
+MENU_STATE = 0
+GAMEPLAY_STATE = 1
+GAME_OVER_STATE = 2
+
+WIDTH, HEIGHT = 800, 600  # window dimensions
+NUM_STARS = 100
+NUM_ENEMIES = 5
+LIVES = 3
+FPS = 60
+USER_SPACESHIP_SIZE = 100
+USER_SPACESHIP_MASS = 5
+ENEMY_SPACESHIP_SIZE = 50
+ENEMY_SPACESHIP_MASS = 3
+FRICTION = 0.98
+SPLASH_SCREEN_DURATION = 2000  # Duration of splash screen in milliseconds (3 seconds)
+STAR_RADIUS = 1
+
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (150, 235, 8)
+YELLOW = (134, 123, 23)
+PINK = (142, 65, 123)
