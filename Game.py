@@ -17,11 +17,11 @@ stars = [Star(constants.WIDTH, constants.HEIGHT) for _ in range(constants.NUM_ST
 
 # Create an instance of the Spaceship class
 userSpaceship = UserSpaceship(screen_width=constants.WIDTH, screen_height=constants.HEIGHT, size=constants.USER_SPACESHIP_SIZE,
-                        mass=constants.USER_SPACESHIP_MASS, bullet_color=constants.GREEN, friction=constants.FRICTION, image_str='spaceship.png')
+                        mass=constants.USER_SPACESHIP_MASS, bullet_color=constants.GREEN, friction=constants.FRICTION, image_str='Assets/spaceship.png')
 
 # Create an initial set of instances of the EnemySpaceship class
 Enemies = [EnemySpaceship(screen_width=constants.WIDTH, screen_height=constants.HEIGHT, size=constants.ENEMY_SPACESHIP_SIZE, mass=constants.ENEMY_SPACESHIP_MASS,
-                          bullet_color=constants.YELLOW, friction=1, image_str='enemy.png') for _ in range(constants.NUM_ENEMIES)]
+                          bullet_color=constants.YELLOW, friction=1, image_str='Assets/enemy.png') for _ in range(constants.NUM_ENEMIES)]
 
 # Initialize Pygame mixer
 pygame.mixer.init()

@@ -8,11 +8,12 @@ MAX_SPEED = 4
 
 class Spaceship:
     # initialize with screen dimensions
-    def __init__(self, screen_width, screen_height, size, mass, bullet_color, friction, image_str):
+    def __init__(self, screen_width, screen_height, size, mass, max_speed, bullet_color, friction, image_str):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.size = size
         self.mass = mass
+        self.max_speed = max_speed
         self.bullet_color = bullet_color
         self.friction = friction
         self.is_alive = True  # Flag to track if the spaceship is alive
@@ -36,7 +37,7 @@ class Spaceship:
         # add acceleration to velocity:
         self.velocity.add(self.acceleration)
         # limit maximum velocity
-        self.velocity.limit(MAX_SPEED)
+        self.velocity.limit(self.max_speed)
         # apply friction
         self.velocity.multiplyByConstant(self.friction)
         # add velocity to position:
@@ -69,10 +70,10 @@ class Spaceship:
 
         if distance < CLOSE_ENOUGH:  # if we arrive close to the target
             # limit with the max speed of the vehicle (if instead -max_speed, we have fleeing behaviour)
-            desired.multiplyByConstant(MAX_SPEED * distance / CLOSE_ENOUGH)
+            desired.multiplyByConstant(self.max_speed * distance / CLOSE_ENOUGH)
         else:
             # create velocity equal to the max speed of the object
-            desired.multiplyByConstant(MAX_SPEED)
+            desired.multiplyByConstant(self.max_speed)
 
         # Subtract the desired from the current velocity to create the steering force vector:
         steering_force = desired.subtract(self.velocity)  # steering force = desired vector - current velocity
@@ -87,13 +88,13 @@ class Spaceship:
         # desired velocity is a vector from current location until target: target - location, but in this case
         # it's a vector opposite to the x-coordinate
         if self.location.x < DISTANCE_FROM_BORDER:  # close to left wall
-            desired = PVector(MAX_SPEED, self.velocity.y)
+            desired = PVector(self.max_speed, self.velocity.y)
         elif self.location.x > self.screen_width - DISTANCE_FROM_BORDER:  # close to right wall
-            desired = PVector(-MAX_SPEED, self.velocity.y)
+            desired = PVector(-self.max_speed, self.velocity.y)
         elif self.location.y < DISTANCE_FROM_BORDER:  # close to ceiling
-            desired = PVector(self.velocity.x, MAX_SPEED)
+            desired = PVector(self.velocity.x, self.max_speed)
         elif self.location.y > self.screen_height - DISTANCE_FROM_BORDER:  # close to floor
-            desired = PVector(self.velocity.x, -MAX_SPEED)
+            desired = PVector(self.velocity.x, -self.max_speed)
         else:
             desired = PVector(0, 0)
 

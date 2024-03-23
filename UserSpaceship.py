@@ -5,9 +5,9 @@ from Spaceship import Spaceship
 KEYS_FORCE = 3
 
 class UserSpaceship(Spaceship):
-    def __init__(self, screen_width, screen_height, size, mass, bullet_color, friction, image_str):
+    def __init__(self, screen_width, screen_height, size, mass, max_speed, bullet_color, friction, image_str):
         # call the constructor of the parent class, no need to initialize attributes of the parent class
-        super().__init__(screen_width, screen_height, size, mass, bullet_color, friction, image_str)
+        super().__init__(screen_width, screen_height, size, mass, max_speed, bullet_color, friction, image_str)
 
         # display spaceship in the screen center
         self.rect.center = (self.screen_width / 2, self.screen_height / 2)

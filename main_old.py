@@ -4,7 +4,7 @@ import sys
 from EnemySpaceship import EnemySpaceship
 from Explosion import Explosion
 from UserSpaceship import UserSpaceship
-from stars import Star
+from Stars import Star
 
 # Initialize Pygame
 pygame.init()
@@ -12,11 +12,11 @@ pygame.init()
 # Initialize Pygame mixer
 pygame.mixer.init()
 # Load a sound file
-laser_sound = pygame.mixer.Sound('laser.mp3')
+laser_sound = pygame.mixer.Sound('Assets/laser.mp3')
 laser_volume = 0.1
 laser_sound.set_volume(laser_volume)
 
-explosion_sound = pygame.mixer.Sound('user-explode.mp3')
+explosion_sound = pygame.mixer.Sound('Assets/user-explode.mp3')
 explosion_volume = 0.3
 explosion_sound.set_volume(explosion_volume)
 

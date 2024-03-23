@@ -7,9 +7,9 @@ from Spaceship import Spaceship
 
 class EnemySpaceship(Spaceship):
     # initialize with screen dimensions
-    def __init__(self, screen_width, screen_height, size, mass, bullet_color, friction, image_str):
+    def __init__(self, screen_width, screen_height, size, mass, max_speed, bullet_color, friction, image_str):
         # call the constructor of the parent class, no need to initialize attributes of the parent class
-        super().__init__(screen_width, screen_height, size, mass, bullet_color, friction, image_str)
+        super().__init__(screen_width, screen_height, size, mass, max_speed, bullet_color, friction, image_str)
 
         # initialize random location, velocity and acceleration in upper half of screen
         self.location = PVector( random.randint(0, self.screen_width - self.size), random.randint(0, self.size) )
@@ -22,9 +22,9 @@ class EnemySpaceship(Spaceship):
 
     # create a wandering path for the object
     def wander(self):
-        WANDER_RADIUS = 70  # radius of wander circle - smaller => more straight movement
+        WANDER_RADIUS = 100  # radius of wander circle - smaller => more straight movement
         WANDER_DISTANCE = 100  # distance of current location to center of wander circle - larger => less jitter in move
-        CHANGE_ANGLE = 0.3  # +/- angle area in radians - larger => more jitter
+        CHANGE_ANGLE = 0.6  # +/- angle area in radians - larger => more jitter
 
         # compute random theta angle
         self.wander_theta += random.uniform(-CHANGE_ANGLE, CHANGE_ANGLE)
