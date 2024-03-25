@@ -1,6 +1,7 @@
 import pygame
 import constants
 
+
 def singleton(cls):
     instances = {}
 
@@ -24,8 +25,9 @@ class GameState:
         self.state = new_state
 
     def update(self):
-        # Change state if the player presses a key. Handle logic for changing states: from menu with space go to gameplay,
-        # from gameplay with esc go to menu. From gameover we can't go anywhere for now. Later with R we reload game.
+        # Change state if the player presses a key. Handle logic for changing states: from menu with space go to
+        # gameplay, from gameplay with esc go to menu. From game over we can't go anywhere for now. Later with R we
+        # reload game.
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
             if self.state == constants.MENU_STATE:
@@ -33,4 +35,6 @@ class GameState:
         if keys[pygame.K_ESCAPE]:
             if self.state == constants.GAMEPLAY_STATE:
                 self.change_state(constants.MENU_STATE)
-
+        if keys[pygame.K_r]:
+            if self.state == constants.GAME_OVER_STATE:
+                self.change_state(constants.MENU_STATE)

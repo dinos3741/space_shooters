@@ -1,6 +1,7 @@
 import pygame
 import constants
 
+
 class GameOverState:
     def __init__(self, user, game_state, stars, userSpaceship, enemies):
         self.user = user
@@ -16,7 +17,6 @@ class GameOverState:
         for star in self.stars:
             star.move()
 
-
     def render(self, screen):
         screen.fill(constants.BLACK)
         font = pygame.font.Font(None, 64)
@@ -31,7 +31,6 @@ class GameOverState:
         text_rect = text_surface.get_rect()
         text_rect.bottomleft = (10, constants.HEIGHT - 10)  # Position the text in the bottom-left corner
         screen.blit(text_surface, text_rect)
-
 
         # draw the stars
         for star in self.stars:

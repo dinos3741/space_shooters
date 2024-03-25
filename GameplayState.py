@@ -2,6 +2,7 @@ import pygame
 import constants
 from SpaceshipFactory import SpaceshipFactory
 
+
 class GameplayState:
     def __init__(self, user, game_state, stars, userspaceship, enemies):
         self.user = user
@@ -32,7 +33,6 @@ class GameplayState:
         # flag to run background music method only once
         self.music_has_run = False
 
-
     def handle_events(self, events):
         for event in events:
             # user spaceship shoot event
@@ -52,7 +52,7 @@ class GameplayState:
             star.move()
         # handle collisions
         self.handle_collisions()
-        # check if game is over
+        # check if game is over2
         self.handle_game_over()
         # check if whole army is killed
         if self.army_killed():
@@ -64,9 +64,13 @@ class GameplayState:
             self.background_music(True)
             self.music_has_run = True
 
-
     def render(self, screen):
         screen.fill(constants.BLACK)
+
+        # check if user and enemies exist - if not reload them
+        if self.user.game_over:
+            self.reload()
+
         # draw user spaceship
         self.userSpaceship.draw(screen)
         # draw the enemies
@@ -86,7 +90,8 @@ class GameplayState:
         # display remaining lives down right
         text_surface = font.render("Lives: " + str(self.user.lives), True, constants.WHITE)
         text_rect = text_surface.get_rect()
-        text_rect.bottomright = (constants.WIDTH - 10, constants.HEIGHT - 10)  # Position the text at the bottom-right corner
+        text_rect.bottomright = (
+        constants.WIDTH - 10, constants.HEIGHT - 10)  # Position the text at the bottom-right corner
         screen.blit(text_surface, text_rect)
 
         # display username up left - need to pass the user class as dependency
@@ -94,7 +99,6 @@ class GameplayState:
         name_rect = name_surface.get_rect()
         name_rect.topleft = (10, 10)  # Position the text at the top left corner
         screen.blit(name_surface, name_rect)
-
 
     def handle_collisions(self):
         # for each enemy:
@@ -105,7 +109,6 @@ class GameplayState:
                     # remove the bullet from the list
                     self.userSpaceship.bullets.remove(bullet)
                     # remove enemy from the list
-                    enemy.is_alive = False
                     self.enemies.remove(enemy)
                     # play sound
                     self.enemy_explode_sound.play()
@@ -125,24 +128,34 @@ class GameplayState:
 
             # check collision of user spaceship with any of the enemies
             if self.userSpaceship.rect.colliderect(enemy):
-                enemy.is_alive = False
                 self.enemies.remove(enemy)
                 # remove one life from user
                 self.user.lives -= 1
                 self.user_explode_sound.play()
 
-
     def handle_game_over(self):
         if self.user.lives <= 0:
-            self.userSpaceship.is_alive = False
+            del self.userSpaceship
             self.game_state.change_state(constants.GAME_OVER_STATE)
             # clear the enemy list
             for enemy in self.enemies:
-                enemy.is_alive = False
                 self.enemies.remove(enemy)
+                del enemy
             # close music
             self.background_music(False)
+            # raise the game over flag in the user
+            self.user.game_over = True
 
+    def reload(self):
+        # Create an instance of the Spaceship class using factory
+        self.userSpaceship = SpaceshipFactory.create_spaceship(type='user', number=1, max_speed=4)
+        # Create a set of instances of the EnemySpaceship class using factory
+        self.enemies = SpaceshipFactory.create_spaceship(type='enemy', number=constants.NUM_ENEMIES, max_speed=5)
+        # restore user lives and lower the game over flag
+        self.user.lives = 3
+        self.user.game_over = False
+        # zero the score
+        self.user.score = 0
 
     def background_music(self, switch):
         pygame.mixer.music.load("Assets/ethereal-ambient-music.mp3")
@@ -151,7 +164,6 @@ class GameplayState:
             pygame.mixer.music.play(-1)  # -1 indicates loop indefinitely
         elif switch == False:
             pygame.mixer_music.stop()
-
 
     def army_killed(self):
         if len(self.enemies) == 0:

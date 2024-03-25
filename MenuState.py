@@ -1,7 +1,6 @@
 import pygame
 import constants
 from TextInputBox import TextInputBox
-from User import User
 
 
 class MenuState:
@@ -15,7 +14,8 @@ class MenuState:
         # load image from file
         self.original_background_image = pygame.image.load("Assets/splash_screen_image.jpg")
         # Scale the background image to half the screen size
-        self.background_image = pygame.transform.scale(self.original_background_image, (constants.WIDTH, constants.HEIGHT))
+        self.background_image = pygame.transform.scale(self.original_background_image,
+                                                       (constants.WIDTH, constants.HEIGHT))
         # Set the transparency (alpha) value for the image
         self.background_image.set_alpha(128)  # 128 is the alpha value (0-255)
 
@@ -26,19 +26,17 @@ class MenuState:
         text_box_y = (constants.HEIGHT - text_box_height) // 2
         self.text_input_box = TextInputBox(text_box_x, text_box_y, text_box_width, text_box_height)
 
-
     def handle_events(self, events):
         for event in events:
             self.text_input_box.handle_event(event)
 
-
-    # update is for moving game objects, handling user input and collisions, updating game state and animations, check win/loss conditions
+    # update is for moving game objects, handling user input and collisions, updating game state and animations,
+    # check win/loss conditions
     def update(self):
         for star in self.stars:
             star.move()
         # store text in username class
         self.user.name = self.text_input_box.text
-
 
     # render is for drawing graphic elements on the screen, render text and fonts
     def render(self, screen):
@@ -73,5 +71,3 @@ class MenuState:
             star.draw(screen, constants.WHITE)
 
         self.text_input_box.draw(screen)
-
-

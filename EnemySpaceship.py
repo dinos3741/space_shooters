@@ -5,6 +5,7 @@ import random
 from PVector import PVector
 from Spaceship import Spaceship
 
+
 class EnemySpaceship(Spaceship):
     # initialize with screen dimensions
     def __init__(self, screen_width, screen_height, size, mass, max_speed, bullet_color, friction, image_str):
@@ -12,13 +13,12 @@ class EnemySpaceship(Spaceship):
         super().__init__(screen_width, screen_height, size, mass, max_speed, bullet_color, friction, image_str)
 
         # initialize random location, velocity and acceleration in upper half of screen
-        self.location = PVector( random.randint(0, self.screen_width - self.size), random.randint(0, self.size) )
+        self.location = PVector(random.randint(0, self.screen_width - self.size), random.randint(0, self.size))
 
         self.fire_time = 0  # count when is time to fire a bullet
         self.wander_theta = 0  # initial angle for wander method
 
         self.rect.center = (self.location.x, self.location.y)
-
 
     # create a wandering path for the object
     def wander(self):
@@ -38,12 +38,12 @@ class EnemySpaceship(Spaceship):
         circle_center.multiplyByConstant(WANDER_DISTANCE)
         circle_center.add(self.location)
         heading = self.velocity.heading2D()
-        circle_offset = PVector(WANDER_RADIUS * cos(self.wander_theta + heading), WANDER_RADIUS * sin(self.wander_theta + heading))
+        circle_offset = PVector(WANDER_RADIUS * cos(self.wander_theta + heading),
+                                WANDER_RADIUS * sin(self.wander_theta + heading))
         circle_center.add(circle_offset)
 
         # now that we have the target location, seek it
         self.seek(circle_center)
-
 
     # specific move method of enemy spaceship
     def move(self):
@@ -53,7 +53,6 @@ class EnemySpaceship(Spaceship):
         self.update_position()
         # move bullets
         self.move_bullets('DOWN')
-
 
     def random_fire(self):
         # Check if it's time to fire: it starts with time = 0 then gets current time, adds random internal then fires then sets fire time to current

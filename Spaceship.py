@@ -4,8 +4,6 @@ import pygame
 from PVector import PVector
 from Bullet import Bullet
 
-MAX_SPEED = 4
-
 class Spaceship:
     # initialize with screen dimensions
     def __init__(self, screen_width, screen_height, size, mass, max_speed, bullet_color, friction, image_str):
